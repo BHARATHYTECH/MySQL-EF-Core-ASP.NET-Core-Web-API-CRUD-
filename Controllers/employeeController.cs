@@ -11,7 +11,8 @@ using learncsharp.Models;
 
 namespace learncsharp.Controllers
 {
-    [Route("api/[controller]")]
+   // [Route("api/[controller]")]
+   [Route("[controller]")]
      [ApiController]
     public class employeeController : ControllerBase
     {
@@ -22,12 +23,24 @@ namespace learncsharp.Controllers
         {
             _context = context;
         }
+
+
+
+
+
         // GET: api/Employees
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
         {
             return await _context.Employees.ToListAsync();
         }
+
+
+
+
+
+
+
 
 // GET: api/Employees/5
         [HttpGet("{id}")]
@@ -42,6 +55,42 @@ namespace learncsharp.Controllers
 
             return Employee;
         }
+
+
+
+
+        // PUT: api/Employees/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutEmployee(int id, Employee employee)
+        {
+            if (id != employee.EmployeeId)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(employee).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                
+               
+            }
+
+            return NoContent();
+        }
+
+
+
+
+
+
+
+
         /*public IActionResult Index()
         {
             return View();
