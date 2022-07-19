@@ -42,7 +42,7 @@ namespace learncsharp.Controllers
 
 
 
-// GET: api/Employees/5
+// GET: api/Employees/
         [HttpGet("{id}")]
         public async Task<ActionResult<Employee>> GetEmployee(int id)
         {
@@ -59,7 +59,7 @@ namespace learncsharp.Controllers
 
 
 
-        // PUT: api/Employees/5
+        // PUT: api/Employees/
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmployee(int id, Employee employee)
@@ -77,12 +77,53 @@ namespace learncsharp.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                
+                if (!EmployeeExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
                
             }
 
             return NoContent();
         }
+
+        private bool EmployeeExists(int id)
+        {
+            return _context.Employees.Any(e => e.EmployeeId == id);
+        }
+
+         // POST:  api/Employees/
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Employee>> PostProduct(Employee employee)
+        {
+            _context.Employees.Add(employee);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetEmployee", new { id = employee.EmployeeId }, employee);
+        }
+
+
+         // DELETE: api/Employees/
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            var product = await _context.Employees.FindAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            _context.Employees.Remove(product);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
 
 
 
